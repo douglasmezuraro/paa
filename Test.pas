@@ -12,6 +12,7 @@ type
     FMessage: string;
     function ArrayToString(A: TArray<Integer>): string;
     function TestHighestElement: Boolean;
+    function TestSort: Boolean;
   public
     constructor Create(Input: TInput);
     function Execute: Boolean;
@@ -37,7 +38,6 @@ begin
   Result := Format('[%s]', [Result]);
 end;
 
-
 constructor TImplTest.Create(Input: TInput);
 begin
   FInput := Input;
@@ -47,6 +47,11 @@ end;
 function TImplTest.Execute: Boolean;
 begin
   Result := TestHighestElement;
+
+  if not Result then
+    Exit;
+
+  Result := TestSort;
 end;
 
 function TImplTest.TestHighestElement: Boolean;
@@ -63,6 +68,32 @@ begin
     begin
       Message := Format('Os teste falhou no método "TestHighestElement" com a seguinte entrada: %s.', [ArrayToString(InputPair.Key)]);
       Exit(False);
+    end;
+  end;
+end;
+
+function TImplTest.TestSort: Boolean;
+var
+  InputPair: TInputPair;
+  Index: Integer;
+  A: TArray<Integer>;
+begin
+  Result := True;
+  for InputPair in FInput.Arrays do
+  begin
+    A := InputPair.Key;
+    TImpl.Sort(A);
+    InputPair.Key := A;
+    for Index := Low(A) to High(A) do
+    begin
+      if Index = 0 then
+        Continue;
+
+      if A[Index] < A[Pred(Index)] then
+      begin
+        Message := Format('Os teste falhou no método "TestSort" com a seguinte entrada: %s.', [ArrayToString(A)]);
+        Exit(False);
+      end;
     end;
   end;
 end;

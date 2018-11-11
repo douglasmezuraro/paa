@@ -2,9 +2,6 @@ unit Input;
 
 interface
 
-uses
-  System.Generics.Collections;
-
 type
   TInputPair = class
   private
@@ -22,7 +19,7 @@ type
     FArrays: TInputPairs;
   public
     property Arrays: TInputPairs read FArrays write FArrays;
-    procedure Assign(const JSON: string);
+    function Assign(const JSON: string): TInput;
   end;
 
 implementation
@@ -32,9 +29,10 @@ uses
 
 { TInput }
 
-procedure TInput.Assign(const JSON: string);
+function TInput.Assign(const JSON: string): TInput;
 begin
   Self := TJson.JsonToObject<TInput>(JSON);
+  Result := Self;
 end;
 
 end.

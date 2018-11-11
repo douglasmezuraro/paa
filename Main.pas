@@ -3,9 +3,22 @@ unit Main;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, System.Actions,
-  Vcl.ActnList, Input;
+  Winapi.Windows,
+  Winapi.Messages,
+  System.SysUtils,
+  System.Variants,
+  System.Classes,
+  Vcl.Graphics,
+  Vcl.Controls,
+  Vcl.Forms,
+  Vcl.Dialogs,
+  Vcl.StdCtrls,
+  System.Actions,
+  Vcl.ActnList,
+  Input,
+  Impl,
+  Test,
+  System.IOUtils;
 
 type
   TMainForm = class(TForm)
@@ -25,16 +38,12 @@ type
   public
     constructor Create(Owner: TComponent); override;
     destructor Destroy; override;
-    property Input: TInput read FInput write FInput;
   end;
 
 var
   MainForm: TMainForm;
 
 implementation
-
-uses
-  Impl, Test, System.IOUtils;
 
 {$R *.dfm}
 
@@ -47,7 +56,7 @@ begin
   if OpenFile(Path) then
   begin
     JSON := TFile.ReadAllText(Path);
-    Input.Assign(JSON);
+    FInput := FInput.Assign(JSON);
   end;
 end;
 
@@ -59,12 +68,12 @@ end;
 constructor TMainForm.Create(Owner: TComponent);
 begin
   inherited Create(Owner);
-  Input := TInput.Create;
+  FInput := TInput.Create;
 end;
 
 destructor TMainForm.Destroy;
 begin
-  Input.Free;
+  FInput.Free;
   inherited Destroy;
 end;
 
@@ -93,7 +102,7 @@ function TMainForm.Test: string;
 var
   Test: TImplTest;
 begin
-  Test := TImplTest.Create(Input);
+  Test := TImplTest.Create(FInput);
   try
     Test.Execute;
     Result := Test.Message;
