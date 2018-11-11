@@ -28,9 +28,9 @@ uses
 
 procedure TMainForm.Button1Click(Sender: TObject);
 const
-  A: TArray<Integer> = [0, 1, 2, 3, 4, 5, 10, 9, 8, 7];
+  A: TArray<Integer> = [9,8,7,6,5,4,3,2,1,0];
 begin
-  ShowMessage(HighestElement(A).ToString);
+  ShowMessage(A[HighestElement(A)].ToString);
 end;
 
 function TMainForm.HighestElement(A: TArray<Integer>): Integer;
@@ -44,7 +44,7 @@ begin
   Next := A[Middle + 1];
 
   if (Curr > Prev) and (Curr > Next) then
-    Exit(Curr);
+    Exit(Middle);
 
   if Curr > Prev then
     A := Copy(A, Middle, Count - Middle);
