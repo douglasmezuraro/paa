@@ -22,20 +22,19 @@ type
     FArrays: TInputPairs;
   public
     property Arrays: TInputPairs read FArrays write FArrays;
-    constructor Create(const Path: string);
+    procedure Assign(const JSON: string);
   end;
 
 implementation
 
 uses
-  REST.Json,
-  System.IOUtils;
+  REST.Json;
 
 { TInput }
 
-constructor TInput.Create(const Path: string);
+procedure TInput.Assign(const JSON: string);
 begin
-  Self := TJson.JsonToObject<TInput>(TFile.ReadAllText(Path));
+  Self := TJson.JsonToObject<TInput>(JSON);
 end;
 
 end.

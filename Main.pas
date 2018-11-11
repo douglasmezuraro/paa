@@ -23,6 +23,8 @@ type
     function OpenFile(out Path: string): Boolean;
     function Test: string;
   public
+    constructor Create(Owner: TComponent); override;
+    destructor Destroy; override;
     property Input: TInput read FInput write FInput;
   end;
 
@@ -32,7 +34,7 @@ var
 implementation
 
 uses
-  Impl, Test;
+  Impl, Test, System.IOUtils;
 
 {$R *.dfm}
 
@@ -40,15 +42,30 @@ uses
 
 procedure TMainForm.ActionOpenInputFileExecute(Sender: TObject);
 var
-  Path: string;
+  Path, JSON: string;
 begin
   if OpenFile(Path) then
-    Input := TInput.Create(Path);
+  begin
+    JSON := TFile.ReadAllText(Path);
+    Input.Assign(JSON);
+  end;
 end;
 
 procedure TMainForm.ActionTestExecute(Sender: TObject);
 begin
   ShowMessage(Self.Test);
+end;
+
+constructor TMainForm.Create(Owner: TComponent);
+begin
+  inherited Create(Owner);
+  Input := TInput.Create;
+end;
+
+destructor TMainForm.Destroy;
+begin
+  Input.Free;
+  inherited Destroy;
 end;
 
 function TMainForm.OpenFile(out Path: string): Boolean;
