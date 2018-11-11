@@ -83,21 +83,19 @@ end;
 
 procedure TMainForm.Sort(var A: TArray<Integer>);
 var
-  FoundIndex, Size, Index, Aux: Integer;
-  Slice: TArray<Integer>;
+  L, R, Temp: Integer;
 begin
-  FoundIndex := HighestElement(A);
-  Size := Length(A);
-
-  for Index := FoundIndex to High(A) do
+  L := HighestElement(A);
+  R := Length(A) - 1;
+  while (R - L) > 0 do
   begin
-    Aux := A[Index];
-    A[Index] := A[Size];
-    A[Size] := Aux;
+    Temp := A[L];
+    A[L] := A[R];
+    A[R] := Temp;
 
-    Dec(Size);
+    Inc(L);
+    Dec(R);
   end;
-
 end;
 
 function TMainForm.Test(out A: TArray<Integer>): Boolean;
