@@ -11,7 +11,9 @@ type
     Button1: TButton;
     procedure Button1Click(Sender: TObject);
   private
-    function HighestElement(A: TArray<Integer>): Integer;
+    function HighestElement(A: TArray<Integer>): Integer; overload;
+    function HighestElement(A: TArray<Integer>; L, R: Integer): Integer; overload;
+    procedure Sort(var A: TArray<Integer>);
   end;
 
 var
@@ -27,18 +29,25 @@ uses
 { TMainForm }
 
 procedure TMainForm.Button1Click(Sender: TObject);
-const
-  A: TArray<Integer> = [9,8,7,6,5,4,3,2,1,0];
+var
+  A: TArray<Integer>;
 begin
+  A := [0, 1, 2, 3, 4, 5, 9, 8, 7, 6];
   ShowMessage(A[HighestElement(A)].ToString);
+  Sort(A);
 end;
 
 function TMainForm.HighestElement(A: TArray<Integer>): Integer;
-var
-  Count, Middle, Curr, Prev, Next: Integer;
 begin
-  Count := Length(A);
-  Middle := Round(Count / 2);
+  Result := HighestElement(A, 0, Length(A));
+end;
+
+function TMainForm.HighestElement(A: TArray<Integer>; L, R: Integer): Integer;
+var
+  Middle, Curr, Prev, Next: Integer;
+begin
+  Middle := L + Round((R - L) / 2);
+
   Curr := A[Middle];
   Prev := A[Middle - 1];
   Next := A[Middle + 1];
@@ -47,12 +56,35 @@ begin
     Exit(Middle);
 
   if Curr > Prev then
-    A := Copy(A, Middle, Count - Middle);
+  begin
+    Result := HighestElement(A, Middle, R - L);
+    Exit;
+  end;
 
   if Curr > Next then
-    A := Copy(A, 0, Middle);
+  begin
+    Result := HighestElement(A, 0, Middle);
+    Exit;
+  end;
+end;
 
-  Exit(HighestElement(A));
+procedure TMainForm.Sort(var A: TArray<Integer>);
+var
+  FoundIndex, Size, Index, Aux: Integer;
+  Slice: TArray<Integer>;
+begin
+  FoundIndex := HighestElement(A);
+  Size := Length(A);
+
+  for Index := FoundIndex to High(A) do
+  begin
+    Aux := A[Index];
+    A[Index] := A[Size];
+    A[Size] := Aux;
+
+    Dec(Size);
+  end;
+
 end;
 
 end.
