@@ -13,22 +13,43 @@ object MainForm: TMainForm
   OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 13
-  object Button1: TButton
-    Left = 32
-    Top = 64
-    Width = 75
+  object ButtonExecute: TButton
+    Left = 8
+    Top = 70
+    Width = 89
     Height = 25
-    Caption = 'Button1'
+    Action = ActionExecute
     TabOrder = 0
-    OnClick = Button1Click
   end
-  object Button2: TButton
-    Left = 152
-    Top = 80
-    Width = 75
+  object ButtonTest: TButton
+    Left = 8
+    Top = 39
+    Width = 89
     Height = 25
-    Caption = 'Testar'
+    Action = ActionTest
     TabOrder = 1
-    OnClick = Button2Click
+  end
+  object ButtonOpenInputFile: TButton
+    Left = 8
+    Top = 8
+    Width = 89
+    Height = 25
+    Action = ActionOpenInputFile
+    TabOrder = 2
+  end
+  object ActionList: TActionList
+    Left = 280
+    Top = 32
+    object ActionOpenInputFile: TAction
+      Caption = 'Open input file'
+      OnExecute = ActionOpenInputFileExecute
+    end
+    object ActionTest: TAction
+      Caption = 'Test'
+      OnExecute = ActionTestExecute
+    end
+    object ActionExecute: TAction
+      Caption = 'Execute'
+    end
   end
 end

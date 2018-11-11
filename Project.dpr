@@ -2,7 +2,10 @@ program Project;
 
 uses
   Vcl.Forms,
-  Main in 'Main.pas' {MainForm};
+  Main in 'Main.pas' {MainForm},
+  Impl in 'Impl.pas',
+  Test in 'Test.pas',
+  Input in 'Input.pas';
 
 {$R *.res}
 

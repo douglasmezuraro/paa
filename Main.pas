@@ -4,20 +4,26 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, System.Actions,
+  Vcl.ActnList, Input;
 
 type
   TMainForm = class(TForm)
-    Button1: TButton;
-    Button2: TButton;
-    procedure Button1Click(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
+    ButtonExecute: TButton;
+    ButtonTest: TButton;
+    ButtonOpenInputFile: TButton;
+    ActionList: TActionList;
+    ActionOpenInputFile: TAction;
+    ActionTest: TAction;
+    ActionExecute: TAction;
+    procedure ActionOpenInputFileExecute(Sender: TObject);
+    procedure ActionTestExecute(Sender: TObject);
   private
-    function HighestElement(A: TArray<Integer>): Integer; overload;
-    function HighestElement(A: TArray<Integer>; L, R: Integer): Integer; overload;
-    procedure Sort(var A: TArray<Integer>);
-    function Test(out A: TArray<Integer>): Boolean;
-    function ToString(const A: TArray<Integer>): string;
+    FInput: TInput;
+    function OpenFile(out Path: string): Boolean;
+    function Test: string;
+  public
+    property Input: TInput read FInput write FInput;
   end;
 
 var
@@ -26,129 +32,57 @@ var
 implementation
 
 uses
-  System.Generics.Collections;
+  Impl, Test;
 
 {$R *.dfm}
 
 { TMainForm }
 
-procedure TMainForm.Button1Click(Sender: TObject);
+procedure TMainForm.ActionOpenInputFileExecute(Sender: TObject);
 var
-  A: TArray<Integer>;
+  Path: string;
 begin
-  A := [0, 1, 9, 8, 7, 6, 5, 4, 3, 2];
-  Sort(A);
+  if OpenFile(Path) then
+    Input := TInput.Create(Path);
 end;
 
-function TMainForm.HighestElement(A: TArray<Integer>): Integer;
+procedure TMainForm.ActionTestExecute(Sender: TObject);
 begin
-  Result := HighestElement(A, 0, Length(A));
+  ShowMessage(Self.Test);
 end;
 
-procedure TMainForm.Button2Click(Sender: TObject);
+function TMainForm.OpenFile(out Path: string): Boolean;
 var
-  Message: string;
-  A: TArray<Integer>;
+  OpenDialog: TOpenDialog;
 begin
-  Message := 'Testes executados com sucesso!';
-
-  if not Test(A) then
-    Message := Format('O array %s não passou nos testes!', [ToString(A)]);
-
-  ShowMessage(Message);
-end;
-
-function TMainForm.HighestElement(A: TArray<Integer>; L, R: Integer): Integer;
-var
-  M, Curr, Prior, Next: Integer;
-begin
-  M := L + Round((R - L) / 2);
-
-  Prior := A[Pred(M)];
-  Curr := A[M];
-  Next := A[Succ(M)];
-
-  if (Curr > Prior) and (Curr > Next) then
-    Exit(M);
-
-  if Curr < Next then
-    Exit(HighestElement(A, M, R));
-
-  if Curr > Next then
-    Exit(HighestElement(A, 0, M));
-
-  if (M = 0) or (M = Length(A)) then
-    Exit(M);
-end;
-
-procedure TMainForm.Sort(var A: TArray<Integer>);
-var
-  L, R, Temp: Integer;
-begin
-  L := HighestElement(A);
-  R := Pred(Length(A));
-  while (R - L) > 0 do
-  begin
-    Temp := A[L];
-    A[L] := A[R];
-    A[R] := Temp;
-
-    Inc(L);
-    Dec(R);
-  end;
-end;
-
-function TMainForm.Test(out A: TArray<Integer>): Boolean;
-var
-  Dictionary: TDictionary<TArray<Integer>, Integer>;
-  Tuple: TPair<TArray<Integer>, Integer>;
-  Test: TArray<Integer>;
-  Value, ExpectedValue: Integer;
-begin
-  Result := True;
-  Dictionary := TDictionary<TArray<Integer>, Integer>.Create;
+  Result := False;
+  OpenDialog := TOpenDialog.Create(Self);
   try
-    Dictionary.Add([9, 8, 7, 6, 5, 4, 3, 2, 1, 0], 0);
-    Dictionary.Add([0, 9, 8, 7, 6, 5, 4, 3, 2, 1], 1);
-    Dictionary.Add([0, 1, 9, 8, 7, 6, 5, 4, 3, 2], 2);
-    Dictionary.Add([0, 1, 2, 9, 8, 7, 6, 5, 4, 3], 3);
-    Dictionary.Add([0, 1, 2, 3, 9, 8, 7, 6, 5, 4], 4);
-    Dictionary.Add([0, 1, 2, 3, 4, 9, 8, 7, 6, 5], 5);
-    Dictionary.Add([0, 1, 2, 3, 4, 5, 9, 8, 7, 6], 6);
-    Dictionary.Add([0, 1, 2, 3, 4, 5, 6, 9, 8, 7], 7);
-    Dictionary.Add([0, 1, 2, 3, 4, 5, 6, 7, 9, 8], 8);
-    Dictionary.Add([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 9);
+    OpenDialog.InitialDir := GetCurrentDir;
+    OpenDialog.Options := [ofFileMustExist];
+    OpenDialog.Filter := 'JSON|*.json';
 
-    for Tuple in Dictionary do
+    if OpenDialog.Execute then
     begin
-      Test := Tuple.Key;
-      ExpectedValue := Tuple.Value;
-      Value := HighestElement(Test);
-
-      if Value <> ExpectedValue then
-      begin
-        A := Test;
-        Exit(False);
-      end;
+      Path := OpenDialog.Files.Strings[0];
+      Result := True;
     end;
   finally
-    Dictionary.Free;
+    OpenDialog.Free;
   end;
 end;
 
-function TMainForm.ToString(const A: TArray<Integer>): string;
+function TMainForm.Test: string;
 var
-  Element: Integer;
+  Test: TImplTest;
 begin
-  Result := string.Empty;
-  for Element in A do
-  begin
-    if Result.IsEmpty then
-      Result := Element.ToString
-    else
-      Result := Format('%s, %d', [Result, Element]);
+  Test := TImplTest.Create(Input);
+  try
+    Test.Execute;
+    Result := Test.Message;
+  finally
+    Test.Free;
   end;
-  Result := Format('[%s]', [Result]);
 end;
 
 end.
