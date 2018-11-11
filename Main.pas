@@ -26,7 +26,7 @@ var
 implementation
 
 uses
-  System.Generics.Collections, Math;
+  System.Generics.Collections;
 
 {$R *.dfm}
 
@@ -60,25 +60,25 @@ end;
 
 function TMainForm.HighestElement(A: TArray<Integer>; L, R: Integer): Integer;
 var
-  M, Curr, Prev, Next: Integer;
+  M, Curr, Prior, Next: Integer;
 begin
   M := L + Round((R - L) / 2);
 
+  Prior := A[Pred(M)];
   Curr := A[M];
-  Prev := A[M - 1];
-  Next := A[M + 1];
+  Next := A[Succ(M)];
+
+  if (Curr > Prior) and (Curr > Next) then
+    Exit(M);
+
+  if Curr < Next then
+    Exit(HighestElement(A, M, R));
+
+  if Curr > Next then
+    Exit(HighestElement(A, 0, M));
 
   if (M = 0) or (M = Length(A)) then
     Exit(M);
-
-  if (Curr > Prev) and (Curr > Next) then
-    Exit(M);
-
-  if Curr > Prev then
-    Exit(HighestElement(A, M, R));
-
-  if Prev > Curr then
-    Exit(HighestElement(A, 0, M));
 end;
 
 procedure TMainForm.Sort(var A: TArray<Integer>);
@@ -86,7 +86,7 @@ var
   L, R, Temp: Integer;
 begin
   L := HighestElement(A);
-  R := Length(A) - 1;
+  R := Pred(Length(A));
   while (R - L) > 0 do
   begin
     Temp := A[L];
