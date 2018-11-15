@@ -37,15 +37,13 @@ class function TImpl.HighestElement(A: TArray<Integer>; L, R: Integer): Integer;
 var
   M, Curr, Prior, Next: Integer;
 begin
-  Result := -1;
-
-  M := L + Round((R - L) / 2);
+  M := Round((L + R) / 2);
 
   Prior := A[Pred(M)];
   Curr := A[M];
   Next := A[Succ(M)];
 
-  if (M = 0) or (M = Length(A)) then
+  if L = R then
     Exit(M);
 
   if (Curr > Prior) and (Curr > Next) then
@@ -55,7 +53,9 @@ begin
     Exit(HighestElement(A, M, R));
 
   if Curr > Next then
-    Exit(HighestElement(A, 0, M));
+    Exit(HighestElement(A, L, M));
+
+  Result := -1;
 end;
 
 class function TImpl.Sort(const A: TArray<Integer>): TArray<Integer>;
