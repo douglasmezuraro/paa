@@ -19,11 +19,6 @@ implementation
 
 { TImpl }
 
-class function TImpl.HighestElement(A: TArray<Integer>): Integer;
-begin
-  Result := HighestElement(A, 0, Length(A));
-end;
-
 class function TImpl.CopyArray<T>(const Source: TArray<T>): TArray<T>;
 var
   Size: Integer;
@@ -32,6 +27,12 @@ begin
   SetLength(Result, Size);
   TArray.Copy<T>(Source, Result, Size);
 end;
+
+class function TImpl.HighestElement(A: TArray<Integer>): Integer;
+begin
+  Result := HighestElement(A, 0, Length(A));
+end;
+
 
 class function TImpl.HighestElement(A: TArray<Integer>; L, R: Integer): Integer;
 var

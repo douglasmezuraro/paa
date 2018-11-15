@@ -1,9 +1,10 @@
 object MainForm: TMainForm
   Left = 0
   Top = 0
-  Caption = 'MainForm'
-  ClientHeight = 187
-  ClientWidth = 418
+  BorderIcons = [biSystemMenu]
+  Caption = 'Douglas Mezuraro'
+  ClientHeight = 562
+  ClientWidth = 784
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -11,6 +12,7 @@ object MainForm: TMainForm
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  Position = poScreenCenter
   PixelsPerInch = 96
   TextHeight = 13
   object ButtonExecute: TButton
@@ -37,13 +39,15 @@ object MainForm: TMainForm
     Action = ActionOpenInputFile
     TabOrder = 2
   end
-  object mmo1: TMemo
-    Left = 112
-    Top = 8
-    Width = 289
-    Height = 161
+  object Memo: TMemo
+    Left = 103
+    Top = 0
+    Width = 681
+    Height = 562
+    Align = alRight
     Lines.Strings = (
-      'mmo1')
+      'Memo')
+    ScrollBars = ssVertical
     TabOrder = 3
   end
   object ActionList: TActionList

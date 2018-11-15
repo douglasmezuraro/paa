@@ -30,19 +30,18 @@ type
     ActionOpenInputFile: TAction;
     ActionTest: TAction;
     ActionExecute: TAction;
-    mmo1: TMemo;
+    Memo: TMemo;
     procedure ActionOpenInputFileExecute(Sender: TObject);
     procedure ActionTestExecute(Sender: TObject);
     procedure ActionExecuteExecute(Sender: TObject);
-  private const
-    TResult: array[Boolean] of string = ('Falha', 'Sucesso');
   private
     FInput: TInput;
     FTest: TImplTest;
     function OpenFile(out Path: string): Boolean;
     function ArrayToString(A: TArray<Integer>): string;
     procedure AddLine(const S: string); overload;
-    procedure AddLine(const S: string; Args: array of const); overload;
+    procedure AddLine(const S: string; const Args: array of const); overload;
+    procedure ControlActions;
   public
     constructor Create(Owner: TComponent); override;
     destructor Destroy; override;
@@ -63,7 +62,7 @@ var
   A: TArray<Integer>;
   ExpectedValue, Value: Integer;
 begin
-  mmo1.Clear;
+  Memo.Clear;
   for Pair in FInput.Arrays do
   begin
     A := Pair.Key;
@@ -71,16 +70,11 @@ begin
     Value := TImpl.HighestElement(A);
 
     AddLine('Array: %s', [ArrayToString(A)]);
-
-    AddLine('Exercício 1');
     AddLine('Resultado esperado: %d', [ExpectedValue]);
     AddLine('Resultado obtido: %d', [Value]);
-    AddLine('Exercício 2');
-    AddLine('Resultado: %s', [ArrayToString(TImpl.Sort(A))]);
-
-    AddLine('..................');
+    AddLine('Array ordenado: %s', [ArrayToString(TImpl.Sort(A))]);
+    AddLine('');
   end;
-
 end;
 
 procedure TMainForm.ActionOpenInputFileExecute(Sender: TObject);
@@ -96,6 +90,8 @@ begin
     FInput.Free;
 
   FInput := TJson.JsonToObject<TInput>(JSON);
+
+  ControlActions;
 end;
 
 procedure TMainForm.ActionTestExecute(Sender: TObject);
@@ -113,12 +109,12 @@ end;
 
 procedure TMainForm.AddLine(const S: string);
 begin
-  Self.AddLine(S, []);
+  AddLine(S, []);
 end;
 
-procedure TMainForm.AddLine(const S: string; Args: array of const);
+procedure TMainForm.AddLine(const S: string; const Args: array of const);
 begin
-  mmo1.Lines.Add(Format(S, Args));
+  Memo.Lines.Add(Format(S, Args));
 end;
 
 function TMainForm.ArrayToString(A: TArray<Integer>): string;
@@ -138,11 +134,21 @@ begin
   Result := Format('[%s]', [Result]);
 end;
 
+procedure TMainForm.ControlActions;
+var
+  Enable: Boolean;
+begin
+  Enable := Assigned(FInput) and (not FInput.IsEmpty);
+  ActionTest.Enabled := Enable;
+  ActionExecute.Enabled := Enable;
+end;
+
 constructor TMainForm.Create(Owner: TComponent);
 begin
   inherited Create(Owner);
   FTest := TImplTest.Create;
-  mmo1.Clear;
+  Memo.Clear;
+  ControlActions;
 end;
 
 destructor TMainForm.Destroy;
@@ -164,11 +170,12 @@ begin
   try
     OpenDialog.InitialDir := GetCurrentDir;
     OpenDialog.Options := [ofFileMustExist];
+    OpenDialog.FileName := 'input-file';
     OpenDialog.Filter := 'JSON|*.json';
 
     if OpenDialog.Execute then
     begin
-      Path := OpenDialog.Files.Strings[0];
+      Path := OpenDialog.FileName;
       Result := True;
     end;
   finally
