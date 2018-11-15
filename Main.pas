@@ -75,10 +75,8 @@ begin
     AddLine('Exercício 1');
     AddLine('Resultado esperado: %d', [ExpectedValue]);
     AddLine('Resultado obtido: %d', [Value]);
-
     AddLine('Exercício 2');
-    TImpl.Sort(A);
-    AddLine('Resultado: %s', [ArrayToString(A)]);
+    AddLine('Resultado: %s', [ArrayToString(TImpl.Sort(A))]);
 
     AddLine('..................');
   end;

@@ -58,9 +58,7 @@ begin
   Result := True;
   for InputPair in FInput.Arrays do
   begin
-    A := InputPair.Key;
-    TImpl.Sort(A);
-    InputPair.Key := A;
+    A := TImpl.Sort(InputPair.Key);
     for Index := Low(A) to High(A) do
     begin
       if Index = 0 then

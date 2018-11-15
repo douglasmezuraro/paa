@@ -2,12 +2,15 @@ unit Impl;
 
 interface
 
+uses
+  System.Generics.Collections;
+
 type
   TImpl = class
   public
     class function HighestElement(A: TArray<Integer>): Integer; overload;
     class function HighestElement(A: TArray<Integer>; L, R: Integer): Integer; overload;
-    class procedure Sort(var A: TArray<Integer>);
+    class function Sort(const A: TArray<Integer>): TArray<Integer>;
   end;
 
 implementation
@@ -42,21 +45,27 @@ begin
     Exit(HighestElement(A, 0, M));
 end;
 
-class procedure TImpl.Sort(var A: TArray<Integer>);
+class function TImpl.Sort(const A: TArray<Integer>): TArray<Integer>;
 var
-  L, R, Temp: Integer;
+  B: TArray<Integer>;
+  L, R, Size, Temp: Integer;
 begin
-  L := HighestElement(A);
-  R := Pred(Length(A));
+  Size := Length(A);
+  SetLength(B, Size);
+  TArray.Copy<Integer>(A, B, Size);
+
+  L := HighestElement(B);
+  R := Pred(Size);
   while (R - L) > 0 do
   begin
-    Temp := A[L];
-    A[L] := A[R];
-    A[R] := Temp;
+    Temp := B[L];
+    B[L] := B[R];
+    B[R] := Temp;
 
     Inc(L);
     Dec(R);
   end;
+  Result := B;
 end;
 
 end.
