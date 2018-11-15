@@ -33,11 +33,12 @@ begin
   Result := HighestElement(A, 0, Length(A));
 end;
 
-
 class function TImpl.HighestElement(A: TArray<Integer>; L, R: Integer): Integer;
 var
   M, Curr, Prior, Next: Integer;
 begin
+  Result := -1;
+
   M := L + Round((R - L) / 2);
 
   Prior := A[Pred(M)];

@@ -53,7 +53,7 @@ function TImplTest.TestSort: Boolean;
 var
   Pair: TInputPair;
   Index: Integer;
-  A, B: TArray<Integer>;
+  A: TArray<Integer>;
 begin
   Result := True;
   for Pair in FInput.Arrays do
