@@ -48,9 +48,6 @@ type
     destructor Destroy; override;
   end;
 
-var
-  MainForm: TMainForm;
-
 implementation
 
 uses

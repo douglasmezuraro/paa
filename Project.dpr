@@ -9,6 +9,9 @@ uses
 
 {$R *.res}
 
+var
+  MainForm: TMainForm;
+
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
