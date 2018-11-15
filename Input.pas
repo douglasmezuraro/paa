@@ -18,21 +18,22 @@ type
   private
     FArrays: TInputPairs;
   public
+    destructor Destroy; override;
     property Arrays: TInputPairs read FArrays write FArrays;
-    function Assign(const JSON: string): TInput;
   end;
 
 implementation
 
-uses
-  REST.Json;
-
 { TInput }
 
-function TInput.Assign(const JSON: string): TInput;
+destructor TInput.Destroy;
+var
+  Pair: TInputPair;
 begin
-  Self := TJson.JsonToObject<TInput>(JSON);
-  Result := Self;
+  for Pair in Arrays do
+    Pair.Free;
+
+  inherited Destroy;
 end;
 
 end.

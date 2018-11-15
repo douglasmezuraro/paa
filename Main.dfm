@@ -37,6 +37,15 @@ object MainForm: TMainForm
     Action = ActionOpenInputFile
     TabOrder = 2
   end
+  object mmo1: TMemo
+    Left = 112
+    Top = 8
+    Width = 289
+    Height = 161
+    Lines.Strings = (
+      'mmo1')
+    TabOrder = 3
+  end
   object ActionList: TActionList
     Left = 280
     Top = 32
@@ -50,6 +59,7 @@ object MainForm: TMainForm
     end
     object ActionExecute: TAction
       Caption = 'Execute'
+      OnExecute = ActionExecuteExecute
     end
   end
 end
