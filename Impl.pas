@@ -7,6 +7,8 @@ uses
 
 type
   TImpl = class
+  private
+    class function CopyArray<T>(const Source: TArray<T>): TArray<T>;
   public
     class function HighestElement(A: TArray<Integer>): Integer; overload;
     class function HighestElement(A: TArray<Integer>; L, R: Integer): Integer; overload;
@@ -20,6 +22,15 @@ implementation
 class function TImpl.HighestElement(A: TArray<Integer>): Integer;
 begin
   Result := HighestElement(A, 0, Length(A));
+end;
+
+class function TImpl.CopyArray<T>(const Source: TArray<T>): TArray<T>;
+var
+  Size: Integer;
+begin
+  Size := Length(Source);
+  SetLength(Result, Size);
+  TArray.Copy<T>(Source, Result, Size);
 end;
 
 class function TImpl.HighestElement(A: TArray<Integer>; L, R: Integer): Integer;
@@ -48,14 +59,11 @@ end;
 class function TImpl.Sort(const A: TArray<Integer>): TArray<Integer>;
 var
   B: TArray<Integer>;
-  L, R, Size, Temp: Integer;
+  L, R, Temp: Integer;
 begin
-  Size := Length(A);
-  SetLength(B, Size);
-  TArray.Copy<Integer>(A, B, Size);
-
+  B := CopyArray<Integer>(A);
   L := HighestElement(B);
-  R := Pred(Size);
+  R := Pred(Length(B));
   while (R - L) > 0 do
   begin
     Temp := B[L];
@@ -69,3 +77,4 @@ begin
 end;
 
 end.
+
