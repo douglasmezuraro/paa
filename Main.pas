@@ -39,7 +39,7 @@ type
     FInput: TInput;
     FTest: TImplTest;
     function OpenFile(out Path: string): Boolean;
-    function ArrayToString(A: TArray<Integer>): string;
+    function ArrayToString(const A: TArray<Integer>): string;
     procedure AddLine(const S: string); overload;
     procedure AddLine(const S: string; const Args: array of const); overload;
     procedure ControlActions;
@@ -52,6 +52,9 @@ var
   MainForm: TMainForm;
 
 implementation
+
+uses
+  System.Generics.Collections;
 
 {$R *.dfm}
 
@@ -92,16 +95,17 @@ begin
 end;
 
 procedure TMainForm.ActionTestExecute(Sender: TObject);
-var
-  Message: string;
+type
+  TResultCaption = Array[Boolean] of string;
+const
+  ResultCaption: TResultCaption = ('falha', 'sucesso');
 begin
+  Memo.Clear;
   FTest.Input := FInput;
-
-  Message := 'Os testes falharam!';
-  if FTest.Execute then
-    Message := 'Os testes foram executados com sucesso!';
-
-  ShowMessage(Message);
+  AddLine('Os casos de teste foram executados com %s.', [ResultCaption[FTest.Execute]]);
+  AddLine('Casos de testes totais: %d', [FTest.Count]);
+  AddLine('Casos de testes que falharam: %d', [FTest.Fails]);
+  AddLine('Casos de testes que passaram: %d', [FTest.Successes]);
 end;
 
 procedure TMainForm.AddLine(const S: string);
@@ -114,7 +118,7 @@ begin
   Memo.Lines.Add(Format(S, Args));
 end;
 
-function TMainForm.ArrayToString(A: TArray<Integer>): string;
+function TMainForm.ArrayToString(const A: TArray<Integer>): string;
 var
   Element: Integer;
 begin
