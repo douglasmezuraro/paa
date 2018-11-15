@@ -37,33 +37,30 @@ end;
 
 function TImplTest.TestHighestElement: Boolean;
 var
-  InputPair: TInputPair;
+  Pair: TInputPair;
   Value: Integer;
 begin
   Result := True;
-  for InputPair in FInput.Arrays do
+  for Pair in FInput.Arrays do
   begin
-    Value := TImpl.HighestElement(InputPair.Key);
-    if Value <> InputPair.Value then
+    Value := TImpl.HighestElement(Pair.Key);
+    if Value <> Pair.Value then
       Exit(False);
   end;
 end;
 
 function TImplTest.TestSort: Boolean;
 var
-  InputPair: TInputPair;
+  Pair: TInputPair;
   Index: Integer;
-  A: TArray<Integer>;
+  A, B: TArray<Integer>;
 begin
   Result := True;
-  for InputPair in FInput.Arrays do
+  for Pair in FInput.Arrays do
   begin
-    A := TImpl.Sort(InputPair.Key);
-    for Index := Low(A) to High(A) do
+    A := TImpl.Sort(Pair.Key);
+    for Index := Succ(Low(A)) to High(A) do
     begin
-      if Index = 0 then
-        Continue;
-
       if A[Index] < A[Pred(Index)] then
         Exit(False);
     end;

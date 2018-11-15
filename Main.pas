@@ -19,6 +19,7 @@ uses
   Impl,
   Test,
   System.IOUtils,
+  System.ConvUtils,
   REST.Json;
 
 type
@@ -59,20 +60,14 @@ implementation
 procedure TMainForm.ActionExecuteExecute(Sender: TObject);
 var
   Pair: TInputPair;
-  A: TArray<Integer>;
-  ExpectedValue, Value: Integer;
 begin
   Memo.Clear;
   for Pair in FInput.Arrays do
   begin
-    A := Pair.Key;
-    ExpectedValue := Pair.Value;
-    Value := TImpl.HighestElement(A);
-
-    AddLine('Array: %s', [ArrayToString(A)]);
-    AddLine('Resultado esperado: %d', [ExpectedValue]);
-    AddLine('Resultado obtido: %d', [Value]);
-    AddLine('Array ordenado: %s', [ArrayToString(TImpl.Sort(A))]);
+    AddLine('Array: %s', [ArrayToString(Pair.Key)]);
+    AddLine('Resultado esperado: %d', [Pair.Value]);
+    AddLine('Resultado obtido: %d', [TImpl.HighestElement(Pair.Key)]);
+    AddLine('Array ordenado: %s', [ArrayToString(TImpl.Sort(Pair.Key))]);
     AddLine('');
   end;
 end;
@@ -84,14 +79,16 @@ begin
   if not OpenFile(Path) then
     Exit;
 
-  JSON := TFile.ReadAllText(Path);
-
   if Assigned(FInput) then
     FInput.Free;
-
-  FInput := TJson.JsonToObject<TInput>(JSON);
-
-  ControlActions;
+  try
+    JSON := TFile.ReadAllText(Path);
+    FInput := TJson.JsonToObject<TInput>(JSON);
+    ControlActions;
+  except
+    on E: EConversionError do
+      ShowMessage('O arquivo não é um JSON válido.');
+  end;
 end;
 
 procedure TMainForm.ActionTestExecute(Sender: TObject);
