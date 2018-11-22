@@ -1,3 +1,6 @@
+// Autor: Douglas Mezuraro - RA: 95676 - email: ra95676@uem.com.br
+// Autor: Victor Glauber Lopes Silva - RA: 68474 - email: ra68474@uem.com.br
+
 program PAA;
 
 uses
