@@ -1,9 +1,9 @@
-unit Input;
+unit Impl.Input;
 
 interface
 
 type
-  TInputPair = class
+  TInputTuple = class
   private
     FKey: TArray<Integer>;
     FValue: Integer;
@@ -12,16 +12,16 @@ type
     property Value: Integer read FValue write FValue;
   end;
 
-  TInputPairs = TArray<TInputPair>;
-
   TInput = class
+  private type
+    TInputTuples = TArray<TInputTuple>;
   private
-    FArrays: TInputPairs;
+    FArrays: TInputTuples;
     function GetCount: Integer;
     function GetIsEmpty: Boolean;
   public
     destructor Destroy; override;
-    property Arrays: TInputPairs read FArrays write FArrays;
+    property Arrays: TInputTuples read FArrays write FArrays;
     property Count: Integer read GetCount;
     property IsEmpty: Boolean read GetIsEmpty;
   end;
@@ -32,10 +32,10 @@ implementation
 
 destructor TInput.Destroy;
 var
-  Pair: TInputPair;
+  Tuple: TInputTuple;
 begin
-  for Pair in Arrays do
-    Pair.Free;
+  for Tuple in Arrays do
+    Tuple.Free;
 
   inherited Destroy;
 end;

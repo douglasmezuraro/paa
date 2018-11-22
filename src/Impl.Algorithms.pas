@@ -1,4 +1,4 @@
-unit Impl;
+unit Impl.Algorithms;
 
 interface
 
@@ -7,12 +7,13 @@ uses
   System.Math;
 
 type
-  TImpl = class
+  TAlgorithms = class
   private
     class function CopyArray<T>(const Source: TArray<T>): TArray<T>;
   public
     class function HighestElement(const A: TArray<Integer>): Integer; overload;
-    class function HighestElement(const A: TArray<Integer>; const L, R: Integer): Integer; overload;
+    class function HighestElement(const A: TArray<Integer>; const L, R: Integer)
+      : Integer; overload;
     class function Sort(const A: TArray<Integer>): TArray<Integer>;
   end;
 
@@ -20,7 +21,7 @@ implementation
 
 { TImpl }
 
-class function TImpl.CopyArray<T>(const Source: TArray<T>): TArray<T>;
+class function TAlgorithms.CopyArray<T>(const Source: TArray<T>): TArray<T>;
 var
   Size: Integer;
 begin
@@ -29,12 +30,13 @@ begin
   TArray.Copy<T>(Source, Result, Size);
 end;
 
-class function TImpl.HighestElement(const A: TArray<Integer>): Integer;
+class function TAlgorithms.HighestElement(const A: TArray<Integer>): Integer;
 begin
   Result := HighestElement(A, 0, Length(A));
 end;
 
-class function TImpl.HighestElement(const A: TArray<Integer>; const L, R: Integer): Integer;
+class function TAlgorithms.HighestElement(const A: TArray<Integer>;
+  const L, R: Integer): Integer;
 var
   M, Curr, Prior, Next: Integer;
 begin
@@ -59,7 +61,7 @@ begin
   Result := -1;
 end;
 
-class function TImpl.Sort(const A: TArray<Integer>): TArray<Integer>;
+class function TAlgorithms.Sort(const A: TArray<Integer>): TArray<Integer>;
 var
   B: TArray<Integer>;
   L, R, Temp: Integer;

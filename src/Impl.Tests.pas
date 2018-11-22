@@ -1,14 +1,14 @@
-unit Test;
+unit Impl.Tests;
 
 interface
 
 uses
-  SysUtils,
-  Input,
-  Impl;
+  Impl.Algorithms,
+  Impl.Input,
+  System.SysUtils;
 
 type
-  TTest = class
+  TTests = class
   private
     FInput: TInput;
     FSuccesses: Integer;
@@ -28,7 +28,7 @@ implementation
 
 { TImplTest }
 
-function TTest.Execute: Boolean;
+function TTests.Execute: Boolean;
 begin
   Successes := 0;
   Fails := 0;
@@ -42,38 +42,38 @@ begin
   Result := Fails = 0;
 end;
 
-function TTest.ReadCount: Integer;
+function TTests.ReadCount: Integer;
 begin
   Result := Fails + Successes;
 end;
 
-procedure TTest.TestHighestElement;
+procedure TTests.TestHighestElement;
 var
-  Pair: TInputPair;
+  Tuple: TInputTuple;
   Value: Integer;
 begin
-  for Pair in FInput.Arrays do
+  for Tuple in FInput.Arrays do
   begin
-    Value := TImpl.HighestElement(Pair.Key);
+    Value := TAlgorithms.HighestElement(Tuple.Key);
 
-    if Value = Pair.Value then
+    if Value = Tuple.Value then
       Inc(FSuccesses)
     else
       Inc(FFails);
   end;
 end;
 
-procedure TTest.TestSort;
+procedure TTests.TestSort;
 var
   Result: Boolean;
-  Pair: TInputPair;
+  Tuple: TInputTuple;
   Index: Integer;
   A: TArray<Integer>;
 begin
-  for Pair in FInput.Arrays do
+  for Tuple in FInput.Arrays do
   begin
     Result := True;
-    A := TImpl.Sort(Pair.Key);
+    A := TAlgorithms.Sort(Tuple.Key);
 
     for Index := Low(A) to Pred(High(A)) do
     begin
@@ -92,3 +92,4 @@ begin
 end;
 
 end.
+

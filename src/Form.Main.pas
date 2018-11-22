@@ -1,11 +1,11 @@
-unit Main;
+unit Form.Main;
 
 interface
 
 uses
-  Impl,
-  Input,
-  Test,
+  Impl.Algorithms,
+  Impl.Input,
+  Impl.Tests,
   REST.Json,
   System.Actions,
   System.Classes,
@@ -19,7 +19,7 @@ uses
   Vcl.StdCtrls;
 
 type
-  TMainForm = class(TForm)
+  TMain = class(TForm)
     ButtonExecute: TButton;
     ButtonTest: TButton;
     ButtonOpenInputFile: TButton;
@@ -33,7 +33,7 @@ type
     procedure ActionExecuteExecute(Sender: TObject);
   private
     FInput: TInput;
-    FTest: TTest;
+    FTests: TTests;
     function OpenFile(out Path: string): Boolean;
     function ArrayToString(const A: TArray<Integer>): string;
     procedure AddLine(const Line: string); overload;
@@ -48,27 +48,26 @@ type
 implementation
 
 {$R *.dfm}
-
 { TMainForm }
 
-procedure TMainForm.ActionExecuteExecute(Sender: TObject);
+procedure TMain.ActionExecuteExecute(Sender: TObject);
 var
-  Pair: TInputPair;
+  Tuple: TInputTuple;
 begin
   Memo.Clear;
-  for Pair in FInput.Arrays do
+  for Tuple in FInput.Arrays do
   begin
-    AddLine('Array: %s', [ArrayToString(Pair.Key)]);
-    AddLine('Resultado esperado: %d', [Pair.Value]);
-    AddLine('Resultado obtido: %d', [TImpl.HighestElement(Pair.Key)]);
-    AddLine('Array ordenado: %s', [ArrayToString(TImpl.Sort(Pair.Key))]);
+    AddLine('Array: %s', [ArrayToString(Tuple.Key)]);
+    AddLine('Resultado esperado: %d', [Tuple.Value]);
+    AddLine('Resultado obtido: %d', [TAlgorithms.HighestElement(Tuple.Key)]);
+    AddLine('Array ordenado: %s', [ArrayToString(TAlgorithms.Sort(Tuple.Key))]);
     AddLine('');
   end;
 end;
 
-procedure TMainForm.ActionOpenInputFileExecute(Sender: TObject);
+procedure TMain.ActionOpenInputFileExecute(Sender: TObject);
 var
-  Path, JSON: string;
+  Path, Json: string;
 begin
   if not OpenFile(Path) then
     Exit;
@@ -76,8 +75,8 @@ begin
   if Assigned(FInput) then
     FInput.Free;
   try
-    JSON := TFile.ReadAllText(Path);
-    FInput := TJson.JsonToObject<TInput>(JSON);
+    Json := TFile.ReadAllText(Path);
+    FInput := TJson.JsonToObject<TInput>(Json);
     ControlActions;
   except
     on E: EConversionError do
@@ -85,31 +84,32 @@ begin
   end;
 end;
 
-procedure TMainForm.ActionTestExecute(Sender: TObject);
+procedure TMain.ActionTestExecute(Sender: TObject);
 type
-  TResultCaption = Array[Boolean] of string;
+  TResultCaption = Array [Boolean] of string;
 const
   ResultCaption: TResultCaption = ('falha', 'sucesso');
 begin
   Memo.Clear;
-  FTest.Input := FInput;
-  AddLine('Os casos de teste foram executados com %s.', [ResultCaption[FTest.Execute]]);
-  AddLine('Casos de testes executados: %d', [FTest.Count]);
-  AddLine('Casos de testes que falharam: %d', [FTest.Fails]);
-  AddLine('Casos de testes que passaram: %d', [FTest.Successes]);
+  FTests.Input := FInput;
+  AddLine('Os casos de teste foram executados com %s.',
+    [ResultCaption[FTests.Execute]]);
+  AddLine('Casos de testes executados: %d', [FTests.Count]);
+  AddLine('Casos de testes que falharam: %d', [FTests.Fails]);
+  AddLine('Casos de testes que passaram: %d', [FTests.Successes]);
 end;
 
-procedure TMainForm.AddLine(const Line: string);
+procedure TMain.AddLine(const Line: string);
 begin
   AddLine(Line, []);
 end;
 
-procedure TMainForm.AddLine(const Line: string; const Args: array of const);
+procedure TMain.AddLine(const Line: string; const Args: array of const);
 begin
   Memo.Lines.Add(Format(Line, Args));
 end;
 
-function TMainForm.ArrayToString(const A: TArray<Integer>): string;
+function TMain.ArrayToString(const A: TArray<Integer>): string;
 var
   Element: Integer;
 begin
@@ -126,7 +126,7 @@ begin
   Result := Format('[%s]', [Result]);
 end;
 
-procedure TMainForm.ControlActions;
+procedure TMain.ControlActions;
 var
   Enabled: Boolean;
 begin
@@ -135,17 +135,17 @@ begin
   ActionExecute.Enabled := Enabled;
 end;
 
-constructor TMainForm.Create(Owner: TComponent);
+constructor TMain.Create(Owner: TComponent);
 begin
   inherited Create(Owner);
-  FTest := TTest.Create;
+  FTests := TTests.Create;
   PrintInitialInfo;
   ControlActions;
 end;
 
-destructor TMainForm.Destroy;
+destructor TMain.Destroy;
 begin
-  FTest.Free;
+  FTests.Free;
 
   if Assigned(FInput) then
     FInput.Free;
@@ -153,16 +153,17 @@ begin
   inherited Destroy;
 end;
 
-procedure TMainForm.PrintInitialInfo;
+procedure TMain.PrintInitialInfo;
 begin
   Memo.Clear;
   AddLine('Disciplina: Projeto e Análise de Algoritmos');
   AddLine('Professor: Rodrigo Calvo');
   AddLine('Autor: Douglas Mezuraro - RA: 95676 - email: ra95676@uem.com.br');
   AddLine('Autor: Victor Glauber Lopes Silva - RA: 68474 - email: ra68474@uem.com.br');
+  AddLine('URL do repositório GIT: https://github.com/douglasmezuraro/paa/');
 end;
 
-function TMainForm.OpenFile(out Path: string): Boolean;
+function TMain.OpenFile(out Path: string): Boolean;
 var
   OpenDialog: TOpenDialog;
 begin
