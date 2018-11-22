@@ -3,24 +3,20 @@ unit Main;
 interface
 
 uses
-  Winapi.Windows,
-  Winapi.Messages,
-  System.SysUtils,
-  System.Variants,
-  System.Classes,
-  Vcl.Graphics,
-  Vcl.Controls,
-  Vcl.Forms,
-  Vcl.Dialogs,
-  Vcl.StdCtrls,
-  System.Actions,
-  Vcl.ActnList,
-  Input,
   Impl,
+  Input,
   Test,
-  System.IOUtils,
+  REST.Json,
+  System.Actions,
+  System.Classes,
   System.ConvUtils,
-  REST.Json;
+  System.IOUtils,
+  System.SysUtils,
+  Vcl.ActnList,
+  Vcl.Controls,
+  Vcl.Dialogs,
+  Vcl.Forms,
+  Vcl.StdCtrls;
 
 type
   TMainForm = class(TForm)
@@ -37,21 +33,19 @@ type
     procedure ActionExecuteExecute(Sender: TObject);
   private
     FInput: TInput;
-    FTest: TImplTest;
+    FTest: TTest;
     function OpenFile(out Path: string): Boolean;
     function ArrayToString(const A: TArray<Integer>): string;
-    procedure AddLine(const S: string); overload;
-    procedure AddLine(const S: string; const Args: array of const); overload;
+    procedure AddLine(const Line: string); overload;
+    procedure AddLine(const Line: string; const Args: array of const); overload;
     procedure ControlActions;
+    procedure PrintInitialInfo;
   public
     constructor Create(Owner: TComponent); override;
     destructor Destroy; override;
   end;
 
 implementation
-
-uses
-  System.Generics.Collections;
 
 {$R *.dfm}
 
@@ -100,19 +94,19 @@ begin
   Memo.Clear;
   FTest.Input := FInput;
   AddLine('Os casos de teste foram executados com %s.', [ResultCaption[FTest.Execute]]);
-  AddLine('Casos de testes totais: %d', [FTest.Count]);
+  AddLine('Casos de testes executados: %d', [FTest.Count]);
   AddLine('Casos de testes que falharam: %d', [FTest.Fails]);
   AddLine('Casos de testes que passaram: %d', [FTest.Successes]);
 end;
 
-procedure TMainForm.AddLine(const S: string);
+procedure TMainForm.AddLine(const Line: string);
 begin
-  AddLine(S, []);
+  AddLine(Line, []);
 end;
 
-procedure TMainForm.AddLine(const S: string; const Args: array of const);
+procedure TMainForm.AddLine(const Line: string; const Args: array of const);
 begin
-  Memo.Lines.Add(Format(S, Args));
+  Memo.Lines.Add(Format(Line, Args));
 end;
 
 function TMainForm.ArrayToString(const A: TArray<Integer>): string;
@@ -134,18 +128,18 @@ end;
 
 procedure TMainForm.ControlActions;
 var
-  Enable: Boolean;
+  Enabled: Boolean;
 begin
-  Enable := Assigned(FInput) and (not FInput.IsEmpty);
-  ActionTest.Enabled := Enable;
-  ActionExecute.Enabled := Enable;
+  Enabled := Assigned(FInput) and (not FInput.IsEmpty);
+  ActionTest.Enabled := Enabled;
+  ActionExecute.Enabled := Enabled;
 end;
 
 constructor TMainForm.Create(Owner: TComponent);
 begin
   inherited Create(Owner);
-  FTest := TImplTest.Create;
-  Memo.Clear;
+  FTest := TTest.Create;
+  PrintInitialInfo;
   ControlActions;
 end;
 
@@ -159,6 +153,15 @@ begin
   inherited Destroy;
 end;
 
+procedure TMainForm.PrintInitialInfo;
+begin
+  Memo.Clear;
+  AddLine('Disciplina: Projeto e Análise de Algoritmos');
+  AddLine('Professor: Rodrigo Calvo');
+  AddLine('Autor: Douglas Mezuraro - RA: 95676 - email: ra95676@uem.com.br');
+  AddLine('Autor: Victor Glauber Lopes Silva - RA: 68474 - email: ra68474@uem.com.br');
+end;
+
 function TMainForm.OpenFile(out Path: string): Boolean;
 var
   OpenDialog: TOpenDialog;
@@ -168,6 +171,7 @@ begin
   try
     OpenDialog.InitialDir := GetCurrentDir;
     OpenDialog.Options := [ofFileMustExist];
+    OpenDialog.Title := 'Arquivo de entrada';
     OpenDialog.FileName := 'input-file';
     OpenDialog.Filter := 'JSON|*.json';
 

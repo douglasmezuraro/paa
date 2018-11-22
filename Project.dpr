@@ -5,7 +5,9 @@ uses
   Main in 'Main.pas' {MainForm},
   Impl in 'Impl.pas',
   Test in 'Test.pas',
-  Input in 'Input.pas';
+  Input in 'Input.pas',
+  Vcl.Themes,
+  Vcl.Styles;
 
 {$R *.res}
 
@@ -15,6 +17,7 @@ var
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
+  TStyleManager.TrySetStyle('Carbon');
   Application.CreateForm(TMainForm, MainForm);
   Application.Run;
   ReportMemoryLeaksOnShutdown := True;

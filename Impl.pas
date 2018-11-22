@@ -3,15 +3,16 @@ unit Impl;
 interface
 
 uses
-  System.Generics.Collections;
+  System.Generics.Collections,
+  System.Math;
 
 type
   TImpl = class
   private
     class function CopyArray<T>(const Source: TArray<T>): TArray<T>;
   public
-    class function HighestElement(A: TArray<Integer>): Integer; overload;
-    class function HighestElement(A: TArray<Integer>; L, R: Integer): Integer; overload;
+    class function HighestElement(const A: TArray<Integer>): Integer; overload;
+    class function HighestElement(const A: TArray<Integer>; const L, R: Integer): Integer; overload;
     class function Sort(const A: TArray<Integer>): TArray<Integer>;
   end;
 
@@ -28,16 +29,16 @@ begin
   TArray.Copy<T>(Source, Result, Size);
 end;
 
-class function TImpl.HighestElement(A: TArray<Integer>): Integer;
+class function TImpl.HighestElement(const A: TArray<Integer>): Integer;
 begin
   Result := HighestElement(A, 0, Length(A));
 end;
 
-class function TImpl.HighestElement(A: TArray<Integer>; L, R: Integer): Integer;
+class function TImpl.HighestElement(const A: TArray<Integer>; const L, R: Integer): Integer;
 var
   M, Curr, Prior, Next: Integer;
 begin
-  M := Round((L + R) / 2);
+  M := Floor((L + R) / 2);
 
   Prior := A[Pred(M)];
   Curr := A[M];
@@ -50,7 +51,7 @@ begin
     Exit(M);
 
   if Curr < Next then
-    Exit(HighestElement(A, M, R));
+    Exit(HighestElement(A, Succ(M), R));
 
   if Curr > Next then
     Exit(HighestElement(A, L, M));

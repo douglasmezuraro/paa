@@ -2,7 +2,7 @@ object MainForm: TMainForm
   Left = 0
   Top = 0
   BorderIcons = [biSystemMenu]
-  Caption = 'Douglas Mezuraro'
+  Caption = 'Primeiro trabalho de Projeto e An'#225'lise de algoritmos'
   ClientHeight = 562
   ClientWidth = 784
   Color = clBtnFace
@@ -21,7 +21,7 @@ object MainForm: TMainForm
     Width = 89
     Height = 25
     Action = ActionExecute
-    TabOrder = 0
+    TabOrder = 2
   end
   object ButtonTest: TButton
     Left = 8
@@ -37,7 +37,7 @@ object MainForm: TMainForm
     Width = 89
     Height = 25
     Action = ActionOpenInputFile
-    TabOrder = 2
+    TabOrder = 0
   end
   object Memo: TMemo
     Left = 103
@@ -47,22 +47,23 @@ object MainForm: TMainForm
     Align = alRight
     Lines.Strings = (
       'Memo')
+    ReadOnly = True
     ScrollBars = ssVertical
     TabOrder = 3
   end
   object ActionList: TActionList
-    Left = 280
-    Top = 32
+    Left = 16
+    Top = 104
     object ActionOpenInputFile: TAction
-      Caption = 'Open input file'
+      Caption = '&Abrir entrada'
       OnExecute = ActionOpenInputFileExecute
     end
     object ActionTest: TAction
-      Caption = 'Test'
+      Caption = '&Testar'
       OnExecute = ActionTestExecute
     end
     object ActionExecute: TAction
-      Caption = 'Execute'
+      Caption = '&Executar'
       OnExecute = ActionExecuteExecute
     end
   end

@@ -3,10 +3,12 @@ unit Test;
 interface
 
 uses
-  SysUtils, Input, Impl;
+  SysUtils,
+  Input,
+  Impl;
 
 type
-  TImplTest = class
+  TTest = class
   private
     FInput: TInput;
     FSuccesses: Integer;
@@ -26,7 +28,7 @@ implementation
 
 { TImplTest }
 
-function TImplTest.Execute: Boolean;
+function TTest.Execute: Boolean;
 begin
   Successes := 0;
   Fails := 0;
@@ -40,12 +42,12 @@ begin
   Result := Fails = 0;
 end;
 
-function TImplTest.ReadCount: Integer;
+function TTest.ReadCount: Integer;
 begin
   Result := Fails + Successes;
 end;
 
-procedure TImplTest.TestHighestElement;
+procedure TTest.TestHighestElement;
 var
   Pair: TInputPair;
   Value: Integer;
@@ -61,7 +63,7 @@ begin
   end;
 end;
 
-procedure TImplTest.TestSort;
+procedure TTest.TestSort;
 var
   Result: Boolean;
   Pair: TInputPair;
