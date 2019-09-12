@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{EC73DE1C-A0B9-4A08-AC0E-A6C51C239736}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="PAA.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Test\PAATests.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="PAA">
+        <MSBuild Projects="PAA.dproj"/>
+    </Target>
+    <Target Name="PAA:Clean">
+        <MSBuild Projects="PAA.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="PAA:Make">
+        <MSBuild Projects="PAA.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="PAATests">
+        <MSBuild Projects="Test\PAATests.dproj"/>
+    </Target>
+    <Target Name="PAATests:Clean">
+        <MSBuild Projects="Test\PAATests.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="PAATests:Make">
+        <MSBuild Projects="Test\PAATests.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="PAA;PAATests"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="PAA:Clean;PAATests:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="PAA:Make;PAATests:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

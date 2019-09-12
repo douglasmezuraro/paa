@@ -7,13 +7,14 @@ uses
   System.Math;
 
 type
-  TAlgorithms = class
+  TAlgorithms = class sealed
   private
     class function CopyArray<T>(const Source: TArray<T>): TArray<T>;
+    class function HighestElement(const A: TArray<Integer>; const L, R: Integer): Integer; overload;
+  public const
+    NotFoundIndex = -1;
   public
     class function HighestElement(const A: TArray<Integer>): Integer; overload;
-    class function HighestElement(const A: TArray<Integer>; const L, R: Integer)
-      : Integer; overload;
     class function Sort(const A: TArray<Integer>): TArray<Integer>;
   end;
 
@@ -32,19 +33,21 @@ end;
 
 class function TAlgorithms.HighestElement(const A: TArray<Integer>): Integer;
 begin
-  Result := HighestElement(A, 0, Length(A));
+  if Length(A) = 0 then
+    Exit(NotFoundIndex);
+
+  Result := HighestElement(A, Low(A), High(A));
 end;
 
-class function TAlgorithms.HighestElement(const A: TArray<Integer>;
-  const L, R: Integer): Integer;
+class function TAlgorithms.HighestElement(const A: TArray<Integer>; const L, R: Integer): Integer;
 var
   M, Curr, Prior, Next: Integer;
 begin
   M := Floor((L + R) / 2);
 
   Prior := A[Pred(M)];
-  Curr := A[M];
-  Next := A[Succ(M)];
+  Curr  := A[M];
+  Next  := A[Succ(M)];
 
   if L = R then
     Exit(M);
@@ -58,7 +61,7 @@ begin
   if Curr > Next then
     Exit(HighestElement(A, L, M));
 
-  Result := -1;
+  Result := NotFoundIndex;
 end;
 
 class function TAlgorithms.Sort(const A: TArray<Integer>): TArray<Integer>;
@@ -66,6 +69,9 @@ var
   B: TArray<Integer>;
   L, R, Temp: Integer;
 begin
+  if Length(A) = 0 then
+    Exit(A);
+
   B := CopyArray<Integer>(A);
   L := HighestElement(B);
   R := Pred(Length(B));
