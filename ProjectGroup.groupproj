@@ -3,10 +3,10 @@
         <ProjectGuid>{EC73DE1C-A0B9-4A08-AC0E-A6C51C239736}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
-        <Projects Include="PAA.dproj">
+        <Projects Include="Sort.Algorithmn\pkg\Sort.Algorithmn.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="Test\PAATests.dproj">
+        <Projects Include="Sort.Algorithmn.Tests\pkg\Sort.Algorithn.Tests.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -17,32 +17,32 @@
             <Default.Personality/>
         </BorlandProject>
     </ProjectExtensions>
-    <Target Name="PAA">
-        <MSBuild Projects="PAA.dproj"/>
+    <Target Name="Sort_Algorithmn">
+        <MSBuild Projects="Sort.Algorithmn\pkg\Sort.Algorithmn.dproj"/>
     </Target>
-    <Target Name="PAA:Clean">
-        <MSBuild Projects="PAA.dproj" Targets="Clean"/>
+    <Target Name="Sort_Algorithmn:Clean">
+        <MSBuild Projects="Sort.Algorithmn\pkg\Sort.Algorithmn.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="PAA:Make">
-        <MSBuild Projects="PAA.dproj" Targets="Make"/>
+    <Target Name="Sort_Algorithmn:Make">
+        <MSBuild Projects="Sort.Algorithmn\pkg\Sort.Algorithmn.dproj" Targets="Make"/>
     </Target>
-    <Target Name="PAATests">
-        <MSBuild Projects="Test\PAATests.dproj"/>
+    <Target Name="Sort_Algorithn_Tests">
+        <MSBuild Projects="Sort.Algorithmn.Tests\pkg\Sort.Algorithn.Tests.dproj"/>
     </Target>
-    <Target Name="PAATests:Clean">
-        <MSBuild Projects="Test\PAATests.dproj" Targets="Clean"/>
+    <Target Name="Sort_Algorithn_Tests:Clean">
+        <MSBuild Projects="Sort.Algorithmn.Tests\pkg\Sort.Algorithn.Tests.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="PAATests:Make">
-        <MSBuild Projects="Test\PAATests.dproj" Targets="Make"/>
+    <Target Name="Sort_Algorithn_Tests:Make">
+        <MSBuild Projects="Sort.Algorithmn.Tests\pkg\Sort.Algorithn.Tests.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="PAA;PAATests"/>
+        <CallTarget Targets="Sort_Algorithmn;Sort_Algorithn_Tests"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="PAA:Clean;PAATests:Clean"/>
+        <CallTarget Targets="Sort_Algorithmn:Clean;Sort_Algorithn_Tests:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="PAA:Make;PAATests:Make"/>
+        <CallTarget Targets="Sort_Algorithmn:Make;Sort_Algorithn_Tests:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

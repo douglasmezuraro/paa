@@ -33,9 +33,6 @@ end;
 
 class function TAlgorithms.HighestElement(const A: TArray<Integer>): Integer;
 begin
-  if Length(A) = 0 then
-    Exit(NotFoundIndex);
-
   Result := HighestElement(A, Low(A), High(A));
 end;
 
@@ -43,9 +40,12 @@ class function TAlgorithms.HighestElement(const A: TArray<Integer>; const L, R: 
 var
   M, Curr, Prior, Next: Integer;
 begin
+  if Length(A) = 0 then
+    Exit(NotFoundIndex);
+
   M := Floor((L + R) / 2);
 
-  Prior := A[Pred(M)];
+  Prior := A[IfThen(Pred(M) >= 0, Pred(M), 0)];
   Curr  := A[M];
   Next  := A[Succ(M)];
 
@@ -61,6 +61,9 @@ begin
   if Curr > Next then
     Exit(HighestElement(A, L, M));
 
+  if A[L] = A[R] then
+    Exit(L);
+
   Result := NotFoundIndex;
 end;
 
@@ -74,7 +77,7 @@ begin
 
   B := CopyArray<Integer>(A);
   L := HighestElement(B);
-  R := Pred(Length(B));
+  R := High(B);
   while (R - L) > 0 do
   begin
     Temp := B[L];
